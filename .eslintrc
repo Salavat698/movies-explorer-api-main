@@ -1,0 +1,19 @@
+{
+  "extends": "airbnb-base",
+  "rules": {
+    "no-underscore-dangle": [
+      "error",
+      {
+        "allow": ["_id"]
+      }
+      ],
+      "import/no-unresolved": [
+        2,
+        {
+          "amd": false,
+          "commonjs": false
+        }],
+      "no-console": "off",
+      "func-names": "off"
+  }
+}
