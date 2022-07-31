@@ -6,7 +6,7 @@ const allowedCors = [
   'https://slt116.nomoredomains.monster',
   'http://51.250.68.156',
   'https://51.250.68.156',
-  'http://slt116.nomoredomains.club,
+  'http://slt116.nomoredomains.club',
   'https://slt116.nomoredomains.club',
 ];
 
