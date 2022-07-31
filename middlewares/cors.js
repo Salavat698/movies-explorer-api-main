@@ -2,6 +2,10 @@ const allowedMethods = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 const allowedCors = [
   'http://localhost:3000',
   'https://localhost:3000',
+  'http://slt116.nomoredomains.monster',
+  'https://slt116.nomoredomains.monster',
+  'http://51.250.68.156',
+  'https://51.250.68.156',
 ];
 
 module.exports = (req, res, next) => {
