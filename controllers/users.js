@@ -27,20 +27,50 @@ module.exports.getCurrentUser = (req, res, next) => {
     });
 };
 
+// module.exports.updateProfile = (req, res, next) => {
+//   const { name, email } = req.body;
+//   console.log(name, email);
+//   User.findByIdAndUpdate(req.user._id, { name, email }, { runValidators: true, new: true })
+//     .orFail(new NotFoundError(usersIdMissing))
+//     .then((user) => res.send(user))
+//     .catch((err) => {
+//       if (err.code === 11000) {
+//         return next(new ConflictError(emailTaken));
+//       } if (err.errors.email) {
+//         return next(new BadRequestError(err.errors.email.reason));
+//       } if (err.errors.name) {
+//         return next(new BadRequestError(err.errors.name.reason));
+//       }
+//       return next(err);
+//     });
+// };
 module.exports.updateProfile = (req, res, next) => {
-  const { name, email } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, email }, { runValidators: true, new: true })
-    .orFail(new NotFoundError(usersIdMissing))
-    .then((user) => res.send(user))
-    .catch((err) => {
-      if (err.code === 11000) {
-        return next(new ConflictError(emailTaken));
-      } if (err.errors.email) {
-        return next(new BadRequestError(err.errors.email.reason));
-      } if (err.errors.name) {
-        return next(new BadRequestError(err.errors.name.reason));
+  const { email, name } = req.body;
+  User.findOne({ email })
+    .then((existingUser) => {
+      if (existingUser !== null && existingUser._id.toString() !== req.user._id) {
+        throw new ConflictError('Указанный email принадлежит другому пользователю.');
+      } else {
+        return User.findByIdAndUpdate(
+          req.user._id,
+          { email, name },
+          { new: true, runValidators: true },
+        );
       }
-      return next(err);
+    })
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь с указанным id не найден.');
+      } else {
+        return res.send({ user });
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Некорректные данные при обновлении данных пользователя'));
+      } else {
+        next(err);
+      }
     });
 };
 
